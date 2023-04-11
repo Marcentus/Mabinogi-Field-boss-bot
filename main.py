@@ -129,7 +129,7 @@ async def gnutracker_command(
     
     last_killed_time = await parse_user_time_input_to_unix(last_killed_time)
     if last_killed_time is None:
-        ctx.interaction.response.send_message("Custom time not supported yet!")
+        await ctx.interaction.response.send_message("Custom time not supported yet!")
         return
         
     await db_utils.update_last_killed_time(boss_id, last_killed_time)
@@ -148,7 +148,7 @@ async def golemtracker_command(
     
     last_killed_time = await parse_user_time_input_to_unix(last_killed_time)
     if last_killed_time is None:
-        ctx.interaction.response.send_message("Custom time not supported yet!")
+        await ctx.interaction.response.send_message("Custom time not supported yet!")
         return
         
     await db_utils.update_last_killed_time(boss_id, last_killed_time)
@@ -167,7 +167,7 @@ async def warriortracker_command(
     
     last_killed_time = await parse_user_time_input_to_unix(last_killed_time)
     if last_killed_time is None:
-        ctx.interaction.response.send_message("Custom time not supported yet!")
+        await ctx.interaction.response.send_message("Custom time not supported yet!")
         return
         
     await db_utils.update_last_killed_time(boss_id, last_killed_time)
@@ -186,7 +186,7 @@ async def goblintracker_command(
     
     last_killed_time = await parse_user_time_input_to_unix(last_killed_time)
     if last_killed_time is None:
-        ctx.interaction.response.send_message("Custom time not supported yet!")
+        await ctx.interaction.response.send_message("Custom time not supported yet!")
         return
         
     await db_utils.update_last_killed_time(boss_id, last_killed_time)
@@ -205,7 +205,7 @@ async def spidertracker_command(
     
     last_killed_time = await parse_user_time_input_to_unix(last_killed_time)
     if last_killed_time is None:
-        ctx.interaction.response.send_message("Custom time not supported yet!")
+        await ctx.interaction.response.send_message("Custom time not supported yet!")
         return
     
     await db_utils.update_last_killed_time(boss_id, last_killed_time)
