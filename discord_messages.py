@@ -55,8 +55,9 @@ async def field_boss_window_up_message(channel: discord.TextChannel, name, descr
     return
 
 async def raid_boss_window_up_message(channel: discord.TextChannel, role_id: discord.Role, bosses_in_boss_window: list):
-    embed = discord.Embed(title="", description="")
-    print(bosses_in_boss_window)
+    # If you set the url for each embed to the same thing, they will link when sending them with embeds
+    embed = discord.Embed(title="", description="", url='https://www.google.com/')
+    embed_list = [embed]
     try:
         role = channel.guild.get_role(role_id)
         content = role.mention
@@ -72,8 +73,10 @@ async def raid_boss_window_up_message(channel: discord.TextChannel, role_id: dis
         window2 = boss[3]
         image_link = boss[4]
         embed.add_field(name=f'{name}\t<t:{window1}:t> - <t:{window2}:t>', value='', inline=False)
-
-    await channel.send(embed=embed, content=content)
+        embed_list.append(discord.Embed(url='https://www.google.com/').set_image(url=image_link))
+    
+    # Use embeds to send multiple embeds for the images
+    await channel.send(embeds=embed_list, content=content)
     return
 
 async def ancient_create_message(ctx: discord.ApplicationContext, area, last_killed_time):

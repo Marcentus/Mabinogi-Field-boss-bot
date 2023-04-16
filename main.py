@@ -23,6 +23,7 @@ async def check_field_bosses():
         db_utils.raid_bosses = await db_utils.get_field_raids_from_db()
     if db_utils.ancients is None:
         db_utils.ancients = await db_utils.get_ancients_from_db()
+        # await raid_boss_window_up_message(bot.get_channel(settings.field_boss_timers_channelid), 688173180333981717, [["test", "desc", "time1", "time2", db_utils.raid_bosses[0][9]], ["test", "desc", "time1", "time2", db_utils.raid_bosses[1][9]], ["test", "desc", "time1", "time2", db_utils.raid_bosses[2][9]]])
         
     channel = bot.get_channel(settings.field_boss_timers_channelid)
         
@@ -52,8 +53,8 @@ async def check_field_bosses():
                 await db_utils.update_last_killed_time_to_null(id)
         
         # Check raid bosses
+        raid_bosses_in_window = []
         for boss in db_utils.raid_bosses:
-            raid_bosses_in_window = []
             id = boss[0]
             name = boss[1]
             description = boss[2]
