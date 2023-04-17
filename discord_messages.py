@@ -95,7 +95,7 @@ async def ancient_respawn_message(channel: discord.TextChannel, name, descriptio
     embed = discord.Embed(title=name, description=f"{description}")
     try:
         role = channel.guild.get_role(role_id)
-        content = None
+        content = role.mention
         embed.color = role.color
     except:
         print(f"No role found to mention for {name}")

@@ -34,7 +34,7 @@ async def create_new_ancient_time(area, last_killed_time: int):
     global ancients
     name = f'{area}-ancient-tracker'
     description = None
-    respawn_time = 14400
+    respawn_time = 18000
     role_id = settings.fieldboss_roleid
     image_link = ancienttracker_image
     async with aiosqlite.connect('timers_db.db') as db:
