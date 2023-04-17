@@ -23,6 +23,7 @@ async def check_field_bosses():
         db_utils.raid_bosses = await db_utils.get_field_raids_from_db()
     if db_utils.ancients is None:
         db_utils.ancients = await db_utils.get_ancients_from_db()
+        # await raid_boss_window_up_message(bot.get_channel(settings.field_boss_timers_channelid), 688173180333981717, [["test", "desc", "time1", "time2", db_utils.raid_bosses[0][9]], ["test", "desc", "time1", "time2", db_utils.raid_bosses[1][9]], ["test", "desc", "time1", "time2", db_utils.raid_bosses[3][9]], ["test", "desc", "time1", "time2", db_utils.raid_bosses[2][9]]])
         
     channel = bot.get_channel(settings.field_boss_timers_channelid)
         
@@ -49,10 +50,10 @@ async def check_field_bosses():
             
             if now > next_spawn_window_start:
                 await field_boss_window_up_message(channel, name, description, next_spawn_window_start, next_spawn_window_end, role_id, image_link)
-                sent_message = True
                 await db_utils.update_last_killed_time_to_null(id)
         
         # Check raid bosses
+        raid_bosses_in_window = []
         for boss in db_utils.raid_bosses:
             id = boss[0]
             name = boss[1]
@@ -83,15 +84,20 @@ async def check_field_bosses():
                     if window is None:
                         continue
                     elif 0 <= now - window[0] <= 60:
-                        await field_boss_window_up_message(channel, name, description, window[0], window[1], role_id, image_link)
+                        raid_bosses_in_window.append([name, description, window[0], window[1], image_link])
                         break
             else: 
                 for window in weekend_spawn_windows:
                     if window is None:
                         continue
                     elif 0 <= now - window[0] <= 60:
-                        await field_boss_window_up_message(channel, name, description, window[0], window[1], role_id, image_link)
+                        raid_bosses_in_window.append([name, description, window[0], window[1], image_link])
                         break
+                    
+        if len(raid_bosses_in_window) > 0:
+            print("Sending message up window to discord server")
+            await raid_boss_window_up_message(channel, settings.fieldboss_roleid, raid_bosses_in_window)
+        
         
         # Check Ancients
         if db_utils.ancients:

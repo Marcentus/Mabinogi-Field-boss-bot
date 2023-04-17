@@ -4,8 +4,6 @@ from settings import ancienttracker_roleid
 from unix_conversions import convert_boss_window_string_to_unix
 from datetime import datetime, timedelta
 
-global last_ping
-
 async def field_boss_update_send_message(ctx: discord.ApplicationContext, id: int):
     async with aiosqlite.connect('timers_db.db') as db:
         db.row_factory = aiosqlite.Row
@@ -39,16 +37,13 @@ async def field_boss_update_send_message(ctx: discord.ApplicationContext, id: in
     return
 
 async def field_boss_window_up_message(channel: discord.TextChannel, name, description, next_spawn_window_start, next_spawn_window_end, role_id, image_link):
-    global last_ping
     embed = discord.Embed(title=f'{name}\t<t:{next_spawn_window_start}:t> - <t:{next_spawn_window_end}:t>', description=description)
     try:
         role = channel.guild.get_role(role_id)
         content = role.mention
-        last_ping = datetime.now()
         embed.color = role.color
     except Exception as e:
         print(f"No role found to mention for {name} {role_id}")
-        print(e)
         content = None
         
     if image_link is not None:
@@ -57,6 +52,31 @@ async def field_boss_window_up_message(channel: discord.TextChannel, name, descr
         print(f"No image link to set as thumbnail for {name} {image_link}")
 
     await channel.send(embed=embed, content=content)
+    return
+
+async def raid_boss_window_up_message(channel: discord.TextChannel, role_id: discord.Role, bosses_in_boss_window: list):
+    # If you set the url for each embed to the same thing, they will link when sending them with embeds
+    embed = discord.Embed(title="", description="", url='https://www.google.com/')
+    embed_list = [embed]
+    try:
+        role = channel.guild.get_role(role_id)
+        content = role.mention
+        embed.color = role.color
+    except Exception as e:
+        print(f"No role found to mention for id:{role_id}")
+        content = None
+    
+    for boss in bosses_in_boss_window:
+        name = boss[0]
+        description = boss[1]
+        window1 = boss[2]
+        window2 = boss[3]
+        image_link = boss[4]
+        embed.add_field(name=f'{name}\t<t:{window1}:t> - <t:{window2}:t>', value='', inline=False)
+        embed_list.append(discord.Embed(url='https://www.google.com/').set_image(url=image_link))
+    
+    # Use embeds to send multiple embeds for the images
+    await channel.send(embeds=embed_list, content=content)
     return
 
 async def ancient_create_message(ctx: discord.ApplicationContext, area, last_killed_time):
@@ -75,7 +95,7 @@ async def ancient_respawn_message(channel: discord.TextChannel, name, descriptio
     embed = discord.Embed(title=name, description=f"{description}")
     try:
         role = channel.guild.get_role(role_id)
-        content = None
+        content = role.mention
         embed.color = role.color
     except:
         print(f"No role found to mention for {name}")
