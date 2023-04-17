@@ -1,6 +1,6 @@
 import discord
 import aiosqlite
-from settings import ancienttracker_roleid
+import settings
 from unix_conversions import convert_boss_window_string_to_unix
 from datetime import datetime, timedelta
 
@@ -80,11 +80,11 @@ async def raid_boss_window_up_message(channel: discord.TextChannel, role_id: dis
     return
 
 async def ancient_create_message(ctx: discord.ApplicationContext, area, last_killed_time):
-    next_spawn_time = last_killed_time + 14400
+    next_spawn_time = last_killed_time + settings.ancient_respawn_time
     name = f'{area}-ancient-tracker'
     embed = discord.Embed(title=name, description=f"Created new respawn at: <t:{next_spawn_time}:t>")
     try:
-        embed.color = ctx.guild.get_role(ancienttracker_roleid).color
+        embed.color = ctx.guild.get_role(settings.ancienttracker_roleid).color
     except:
         pass
     
